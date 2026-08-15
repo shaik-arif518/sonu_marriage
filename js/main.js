@@ -330,42 +330,30 @@ function revealMain() {
 if (gate) {
     gate.addEventListener('click', async () => {
         if (mainRevealed) return;
-        if (playOverlay) playOverlay.classList.add('hidden');
+        gate.classList.add('opening');
+        
         try {
-            if (entryVideo) {
-                entryVideo.muted = false; 
-                await entryVideo.play();
+            if (bgAudio) {
+                await bgAudio.play();
+                audioPlaying = true;
+                updateAudioIcon();
             }
-            try {
-                if (bgAudio) {
-                    await bgAudio.play();
-                    audioPlaying = true;
-                    updateAudioIcon();
-                }
-            } catch(_) {}
-        } catch(err) {
-            if (entryVideo) {
-                entryVideo.muted = true;
-                try {
-                    await entryVideo.play();
-                    try {
-                        if (bgAudio) {
-                            await bgAudio.play();
-                            audioPlaying = true;
-                            updateAudioIcon();
-                        }
-                    } catch(_) {}
-                } catch(e2) {
-                    revealMain();
-                }
-            }
-        }
-    });
-}
+        } catch(_) {}
 
-if (entryVideo) {
-    entryVideo.addEventListener('ended', revealMain);
-    entryVideo.addEventListener('error', () => { if (!mainRevealed) setTimeout(revealMain, 500); });
+        if (typeof confetti === 'function') {
+            try {
+                confetti({
+                    particleCount: 30,
+                    spread: 80,
+                    origin: { y: 0.5 },
+                    colors: ['#B85940', '#C9963E', '#E8C07A', '#FFFFFF'],
+                    zIndex: 10000
+                });
+            } catch(_) {}
+        }
+
+        setTimeout(revealMain, 750);
+    });
 }
 
 document.body.style.overflow = 'hidden';
