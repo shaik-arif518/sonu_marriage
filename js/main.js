@@ -379,11 +379,12 @@ if (entryVideo) {
 document.body.style.overflow = 'hidden';
 
 /* ================================================================
-   AUDIO TOGGLE
+   AUDIO TOGGLE & AUTOMATIC PAUSE/RESUME ON TAB VISIBILITY
 ================================================================ */
 const audioBtn = document.getElementById('audio-btn');
 const iconOn   = document.getElementById('icon-on');
 const iconOff  = document.getElementById('icon-off');
+let userManuallyMuted = false;
 
 function updateAudioIcon() {
     if (iconOn && iconOff) {
@@ -398,17 +399,55 @@ if (audioBtn) {
         if (audioPlaying) {
             if (bgAudio) bgAudio.pause();
             audioPlaying = false;
+            userManuallyMuted = true;
         } else {
             try {
                 if (bgAudio) {
                     await bgAudio.play();
                     audioPlaying = true;
+                    userManuallyMuted = false;
                 }
             } catch(err) {}
         }
         updateAudioIcon();
     });
 }
+
+// Automatically stop music when website tab is closed/hidden
+// Automatically resume music when website tab is open/active
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        if (bgAudio && !bgAudio.paused) {
+            bgAudio.pause();
+        }
+    } else {
+        if (mainRevealed && !userManuallyMuted && bgAudio) {
+            bgAudio.play().then(() => {
+                audioPlaying = true;
+                updateAudioIcon();
+            }).catch(() => {});
+        }
+    }
+});
+
+window.addEventListener('pagehide', () => {
+    if (bgAudio) bgAudio.pause();
+});
+
+window.addEventListener('blur', () => {
+    if (bgAudio && !bgAudio.paused) {
+        bgAudio.pause();
+    }
+});
+
+window.addEventListener('focus', () => {
+    if (mainRevealed && !userManuallyMuted && bgAudio && bgAudio.paused) {
+        bgAudio.play().then(() => {
+            audioPlaying = true;
+            updateAudioIcon();
+        }).catch(() => {});
+    }
+});
 
 /* ================================================================
    SCROLL REVEAL & VIDEO AUTO-EXPAND
