@@ -104,23 +104,21 @@ body {
 .reveal-delay-3 { transition-delay: 0.35s; }
 
 /* ============================================================
-   ENTRY VIDEO GATE (With Custom S&R Seamless Cover)
+   ENTRY VIDEO GATE (Same as sourabh-tejaswini.vercel.app)
 ============================================================ */
 #entry-gate {
     position: fixed;
     inset: 0;
-    background: #5A2016;
+    background: #0a0505;
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    overflow: hidden;
     transition: opacity 0.8s ease;
     user-select: none;
     -webkit-user-select: none;
 }
-
 #entry-gate video {
     position: absolute;
     inset: 0;
@@ -128,90 +126,20 @@ body {
     height: 100%;
     object-fit: cover;
 }
-
-#video-cover-overlay {
+#play-overlay {
     position: absolute;
     inset: 0;
-    background: #5A2016;
-    background-image: radial-gradient(circle at center, #6A281C 0%, #4A1A12 100%);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.5s ease-out;
-}
-
-#video-cover-overlay.fade-out, #entry-gate.fade-out {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.cover-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 2rem;
-    max-width: 520px;
-    width: 90%;
-    z-index: 6;
+    z-index: 2;
+    background: rgba(10,5,5,0.35);
+    transition: opacity 0.4s ease;
 }
-
-.tap-reveal-title {
-    font-family: 'Great Vibes', 'Pinyon Script', cursive;
-    font-size: clamp(2.2rem, 6.5vw, 3.2rem);
-    color: #FAF4E8;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
-    letter-spacing: 0.05em;
-    animation: gentlePulse 2.5s ease-in-out infinite;
-}
-
-.wax-seal-container {
-    width: clamp(140px, 32vw, 205px);
-    height: clamp(140px, 32vw, 205px);
-    margin: 0.5rem 0 2rem 0;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#entry-gate:hover .wax-seal-container {
-    transform: scale(1.06);
-}
-
-.wax-seal-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.cover-family-text {
-    color: #FAF4E8;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
-}
-
-.fam-title {
-    font-family: 'Great Vibes', 'Cormorant Garamond', serif;
-    font-size: clamp(1.2rem, 3.5vw, 1.65rem);
-    color: #E8C07A;
-    line-height: 1.35;
-    margin-bottom: 0.5rem;
-}
-
-.fam-sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
-    color: rgba(250, 244, 232, 0.85);
-    margin-bottom: 0.6rem;
-}
-
-.fam-couple {
-    font-family: 'Great Vibes', cursive;
-    font-size: clamp(2.2rem, 7vw, 3.2rem);
-    color: #FFF;
-    text-shadow: 0 2px 12px rgba(201, 150, 62, 0.7);
-    line-height: 1.1;
+#play-overlay.hidden, #entry-gate.fade-out {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* ============================================================

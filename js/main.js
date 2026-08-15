@@ -327,41 +327,37 @@ function revealMain() {
     }
 }
 
-const videoCoverOverlay = document.getElementById('video-cover-overlay');
-
 if (gate) {
     gate.addEventListener('click', async () => {
         if (mainRevealed) return;
-        
-        if (videoCoverOverlay) {
-            videoCoverOverlay.classList.add('fade-out');
-        }
-
-        try {
-            if (bgAudio) {
-                await bgAudio.play();
-                audioPlaying = true;
-                updateAudioIcon();
-            }
-        } catch(_) {}
-
+        if (playOverlay) playOverlay.classList.add('hidden');
         try {
             if (entryVideo) {
-                entryVideo.muted = false;
+                entryVideo.muted = false; 
                 await entryVideo.play();
-            } else {
-                revealMain();
             }
-        } catch(e) {
+            try {
+                if (bgAudio) {
+                    await bgAudio.play();
+                    audioPlaying = true;
+                    updateAudioIcon();
+                }
+            } catch(_) {}
+        } catch(err) {
             if (entryVideo) {
                 entryVideo.muted = true;
                 try {
                     await entryVideo.play();
-                } catch(_) {
+                    try {
+                        if (bgAudio) {
+                            await bgAudio.play();
+                            audioPlaying = true;
+                            updateAudioIcon();
+                        }
+                    } catch(_) {}
+                } catch(e2) {
                     revealMain();
                 }
-            } else {
-                revealMain();
             }
         }
     });
