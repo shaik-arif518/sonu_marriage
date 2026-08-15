@@ -14,23 +14,25 @@
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const PETAL_COLORS = ['#D4806A', '#E8C07A', '#C9963E', '#B85940', '#EEDDD3', '#F5E4C0', '#E75480'];
-    const HEART_COLORS = ['#B85940', '#D4806A', '#E75480', '#C9963E', '#FF69B4'];
-    const COUNT = window.innerWidth < 600 ? 32 : 55;
+    const PETAL_COLORS = ['#B85940', '#D4806A', '#E8C07A', '#C9963E', '#F5E4C0', '#FF85A1', '#FFB7B2'];
+    const HEART_COLORS = ['#B85940', '#D4806A', '#E75480', '#C9963E', '#FF69B4', '#FF85A1'];
+    const COUNT = window.innerWidth < 600 ? 38 : 65;
     const particles = [];
 
     class Particle {
         constructor() { this.reset(true); }
         reset(initial) {
             this.x = Math.random() * canvas.width;
-            this.y = initial ? Math.random() * canvas.height * 1.5 - canvas.height * 0.5 : -25;
-            this.size = 6 + Math.random() * 8;
-            this.vx = (Math.random() - 0.5) * 0.8;
-            this.vy = 0.6 + Math.random() * 1.3;
+            this.y = initial ? Math.random() * canvas.height * 1.5 - canvas.height * 0.5 : -30;
+            this.size = 7 + Math.random() * 10;
+            this.vx = (Math.random() - 0.5) * 0.9;
+            this.vy = 0.7 + Math.random() * 1.4;
             this.rot = Math.random() * Math.PI * 2;
-            this.drot = (Math.random() - 0.5) * 0.04;
-            this.alpha = 0.55 + Math.random() * 0.4;
-            this.swaySpeed = 0.01 + Math.random() * 0.02;
+            this.drot = (Math.random() - 0.5) * 0.035;
+            this.wobble = Math.random() * Math.PI * 2;
+            this.wobbleSpeed = 0.02 + Math.random() * 0.03;
+            this.alpha = 0.6 + Math.random() * 0.38;
+            this.swaySpeed = 0.008 + Math.random() * 0.018;
             
             const rand = Math.random();
             if (rand < 0.45) {
@@ -39,7 +41,7 @@
             } else if (rand < 0.75) {
                 this.type = 'heart';
                 this.color = HEART_COLORS[Math.floor(Math.random() * HEART_COLORS.length)];
-            } else if (rand < 0.90) {
+            } else if (rand < 0.92) {
                 this.type = 'flower';
                 this.color = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
             } else {
@@ -49,27 +51,31 @@
         }
 
         update() {
-            this.x += this.vx + Math.sin(this.y * this.swaySpeed) * 0.6;
+            this.wobble += this.wobbleSpeed;
+            this.x += this.vx + Math.sin(this.y * this.swaySpeed + this.wobble) * 0.75;
             this.y += this.vy;
             this.rot += this.drot;
-            if (this.y > canvas.height + 30) this.reset(false);
+            if (this.y > canvas.height + 35) this.reset(false);
         }
 
         draw() {
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.rot);
+            ctx.scale(Math.cos(this.wobble * 0.5) * 0.3 + 0.7, 1);
             ctx.globalAlpha = this.alpha;
 
             if (this.type === 'petal') {
                 ctx.fillStyle = this.color;
                 ctx.beginPath();
-                ctx.ellipse(0, 0, this.size * 0.5, this.size, 0, 0, Math.PI * 2);
+                ctx.moveTo(0, -this.size);
+                ctx.bezierCurveTo(this.size * 0.7, -this.size * 0.5, this.size * 0.7, this.size * 0.5, 0, this.size);
+                ctx.bezierCurveTo(-this.size * 0.7, this.size * 0.5, -this.size * 0.7, -this.size * 0.5, 0, -this.size);
                 ctx.fill();
             } else if (this.type === 'heart') {
                 ctx.fillStyle = this.color;
                 ctx.beginPath();
-                const s = this.size * 0.6;
+                const s = this.size * 0.55;
                 ctx.moveTo(0, s * 0.3);
                 ctx.bezierCurveTo(-s, -s * 0.6, -s * 1.2, s * 0.5, 0, s * 1.3);
                 ctx.bezierCurveTo(s * 1.2, s * 0.5, s, -s * 0.6, 0, s * 0.3);
@@ -80,17 +86,19 @@
                 for (let i = 0; i < petalsCount; i++) {
                     ctx.rotate((Math.PI * 2) / petalsCount);
                     ctx.beginPath();
-                    ctx.ellipse(0, this.size * 0.4, this.size * 0.3, this.size * 0.5, 0, 0, Math.PI * 2);
+                    ctx.ellipse(0, this.size * 0.45, this.size * 0.3, this.size * 0.5, 0, 0, Math.PI * 2);
                     ctx.fill();
                 }
                 ctx.fillStyle = '#E8C07A';
                 ctx.beginPath();
-                ctx.arc(0, 0, this.size * 0.25, 0, Math.PI * 2);
+                ctx.arc(0, 0, this.size * 0.22, 0, Math.PI * 2);
                 ctx.fill();
             } else if (this.type === 'sparkle') {
                 ctx.fillStyle = this.color;
+                ctx.shadowColor = '#C9963E';
+                ctx.shadowBlur = 6;
                 ctx.beginPath();
-                ctx.arc(0, 0, this.size * 0.25, 0, Math.PI * 2);
+                ctx.arc(0, 0, this.size * 0.28, 0, Math.PI * 2);
                 ctx.fill();
             }
 
