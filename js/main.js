@@ -327,45 +327,26 @@ function revealMain() {
     }
 }
 
+const envelopeCard = document.getElementById('envelope-card');
+const waxSealBtn   = document.getElementById('wax-seal-btn');
+
 if (gate) {
     gate.addEventListener('click', async () => {
         if (mainRevealed) return;
-        if (playOverlay) playOverlay.classList.add('hidden');
-        try {
-            if (entryVideo) {
-                entryVideo.muted = false; 
-                await entryVideo.play();
-            }
-            try {
-                if (bgAudio) {
-                    await bgAudio.play();
-                    audioPlaying = true;
-                    updateAudioIcon();
-                }
-            } catch(_) {}
-        } catch(err) {
-            if (entryVideo) {
-                entryVideo.muted = true;
-                try {
-                    await entryVideo.play();
-                    try {
-                        if (bgAudio) {
-                            await bgAudio.play();
-                            audioPlaying = true;
-                            updateAudioIcon();
-                        }
-                    } catch(_) {}
-                } catch(e2) {
-                    revealMain();
-                }
-            }
-        }
-    });
-}
 
-if (entryVideo) {
-    entryVideo.addEventListener('ended', revealMain);
-    entryVideo.addEventListener('error', () => { if (!mainRevealed) setTimeout(revealMain, 500); });
+        if (waxSealBtn) waxSealBtn.classList.add('breaking');
+        if (envelopeCard) envelopeCard.classList.add('opening');
+
+        try {
+            if (bgAudio) {
+                await bgAudio.play();
+                audioPlaying = true;
+                updateAudioIcon();
+            }
+        } catch(_) {}
+
+        setTimeout(revealMain, 700);
+    });
 }
 
 document.body.style.overflow = 'hidden';

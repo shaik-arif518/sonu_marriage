@@ -104,42 +104,170 @@ body {
 .reveal-delay-3 { transition-delay: 0.35s; }
 
 /* ============================================================
-   ENTRY VIDEO GATE (Same as sourabh-tejaswini.vercel.app)
+   100% REALISTIC ENVELOPE & S&R WAX SEAL GATE
 ============================================================ */
 #entry-gate {
     position: fixed;
     inset: 0;
-    background: #0a0505;
+    background: radial-gradient(circle at center, #6A2429 0%, #340D10 100%);
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: opacity 0.8s ease;
+    transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
     -webkit-user-select: none;
+    overflow: hidden;
+    perspective: 1200px;
+    cursor: pointer;
 }
-#entry-gate video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+
+#entry-gate.fade-out {
+    opacity: 0;
+    transform: scale(1.08);
+    pointer-events: none;
 }
-#play-overlay {
-    position: absolute;
-    inset: 0;
+
+.envelope-card {
+    position: relative;
+    width: min(90vw, 440px);
+    height: min(85vh, 660px);
+    background: #54191D;
+    background-image: 
+        radial-gradient(rgba(232, 192, 122, 0.14) 1px, transparent 0),
+        linear-gradient(135deg, rgba(139, 44, 52, 0.85) 0%, rgba(60, 16, 20, 0.98) 100%);
+    background-size: 24px 24px, 100% 100%;
+    border-radius: 1.5rem;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(232, 192, 122, 0.25) inset;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    z-index: 2;
-    background: rgba(10,5,5,0.35);
-    transition: opacity 0.4s ease;
+    justify-content: space-between;
+    padding: clamp(2rem, 5vh, 3.5rem) 1.5rem;
+    text-align: center;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
 }
-#play-overlay.hidden, #entry-gate.fade-out {
-    opacity: 0;
+
+/* Floral Pattern Overlay */
+.envelope-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e8c07a' fill-opacity='0.06'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40zM0 40h40v40H0V40zm40-40h40v40H40V0z'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.6;
     pointer-events: none;
+}
+
+/* Top Envelope Triangular Flap */
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 52%;
+    background: linear-gradient(180deg, #6B2026 0%, #4A1418 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border-top: 1px solid rgba(232, 192, 122, 0.3);
+}
+
+.envelope-card.opening .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+/* Tap to reveal header */
+.tap-reveal-header {
+    position: relative;
+    z-index: 3;
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    color: var(--gold-light);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    animation: pulseText 2.2s infinite ease-in-out;
+}
+@keyframes pulseText {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.04); }
+}
+
+/* 3D Wax Seal Stamp S&R */
+.wax-seal-wrapper {
+    position: relative;
+    z-index: 4;
+    cursor: pointer;
+    margin: 1.5rem 0;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.wax-seal-wrapper:hover {
+    transform: scale(1.08) rotate(3deg);
+}
+
+.wax-seal-stamp {
+    width: clamp(130px, 26vw, 160px);
+    height: clamp(130px, 26vw, 160px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #F7E7CE 0%, #D4A359 55%, #9E6B27 100%);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 3px 6px rgba(255,255,255,0.7), inset 0 -4px 8px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #E8C07A;
+    padding: 6px;
+}
+
+.wax-seal-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px dashed rgba(74, 22, 26, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 80%);
+}
+
+.seal-monogram {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.4rem, 5vw, 3rem);
+    color: #4A1418;
+    text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
+    font-weight: bold;
+    letter-spacing: -0.02em;
+}
+
+.wax-seal-wrapper.breaking {
+    animation: sealBreak 0.6s ease forwards;
+}
+@keyframes sealBreak {
+    0% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.3) rotate(-10deg); opacity: 0.8; }
+    100% { transform: scale(1.6) rotate(15deg); opacity: 0; }
+}
+
+/* Invitation details on front of envelope */
+.envelope-invite-text {
+    position: relative;
+    z-index: 3;
+    color: var(--gold-pale);
+}
+.invite-subtext {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    font-style: italic;
+    color: var(--gold-light);
+    margin-bottom: 0.5rem;
+}
+.couple-invitation-names {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(2.4rem, 6vw, 3.5rem);
+    color: var(--gold-light);
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
 }
 
 /* ============================================================
