@@ -290,11 +290,11 @@ function initScratchHearts() {
 }
 
 /* ================================================================
-   ENTRY GATE & SCROLLING (Exact replica of sourabh-tejaswini.vercel.app)
-================================================================ */
+   ENTRY GATE & SCROLLING (S&R Custom Wax Seal Envelope Gate)
+============================================================ */
 const gate        = document.getElementById('entry-gate');
-const entryVideo  = document.getElementById('entry-video');
-const playOverlay = document.getElementById('play-overlay');
+const envCard     = document.getElementById('envelope-card');
+const waxSealBtn  = document.getElementById('wax-seal-btn');
 const bgAudio     = document.getElementById('bg-audio');
 const mainEl      = document.getElementById('main-content');
 const petalCanvas = document.getElementById('petals-canvas');
@@ -302,11 +302,6 @@ const petalCanvas = document.getElementById('petals-canvas');
 let audioPlaying = false;
 let mainRevealed = false;
 let scratchInitialized = false;
-
-if (entryVideo) {
-    entryVideo.addEventListener('loadedmetadata', () => { entryVideo.currentTime = 0.001; });
-    entryVideo.addEventListener('loadeddata', () => { if (entryVideo.currentTime < 0.001) entryVideo.currentTime = 0.001; });
-}
 
 function revealMain() {
     if (mainRevealed) return;
@@ -327,16 +322,13 @@ function revealMain() {
     }
 }
 
-const envelopeCard = document.getElementById('envelope-card');
-const waxSealBtn   = document.getElementById('wax-seal-btn');
-
 if (gate) {
     gate.addEventListener('click', async () => {
         if (mainRevealed) return;
-
+        
         if (waxSealBtn) waxSealBtn.classList.add('breaking');
-        if (envelopeCard) envelopeCard.classList.add('opening');
-
+        if (envCard) envCard.classList.add('opening');
+        
         try {
             if (bgAudio) {
                 await bgAudio.play();
@@ -344,8 +336,10 @@ if (gate) {
                 updateAudioIcon();
             }
         } catch(_) {}
-
-        setTimeout(revealMain, 700);
+        
+        setTimeout(() => {
+            revealMain();
+        }, 650);
     });
 }
 
