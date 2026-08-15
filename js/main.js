@@ -327,11 +327,16 @@ function revealMain() {
     }
 }
 
+const videoCoverOverlay = document.getElementById('video-cover-overlay');
+
 if (gate) {
     gate.addEventListener('click', async () => {
         if (mainRevealed) return;
-        gate.classList.add('opening');
         
+        if (videoCoverOverlay) {
+            videoCoverOverlay.classList.add('fade-out');
+        }
+
         try {
             if (bgAudio) {
                 await bgAudio.play();
@@ -340,20 +345,31 @@ if (gate) {
             }
         } catch(_) {}
 
-        if (typeof confetti === 'function') {
-            try {
-                confetti({
-                    particleCount: 30,
-                    spread: 80,
-                    origin: { y: 0.5 },
-                    colors: ['#B85940', '#C9963E', '#E8C07A', '#FFFFFF'],
-                    zIndex: 10000
-                });
-            } catch(_) {}
+        try {
+            if (entryVideo) {
+                entryVideo.muted = false;
+                await entryVideo.play();
+            } else {
+                revealMain();
+            }
+        } catch(e) {
+            if (entryVideo) {
+                entryVideo.muted = true;
+                try {
+                    await entryVideo.play();
+                } catch(_) {
+                    revealMain();
+                }
+            } else {
+                revealMain();
+            }
         }
-
-        setTimeout(revealMain, 750);
     });
+}
+
+if (entryVideo) {
+    entryVideo.addEventListener('ended', revealMain);
+    entryVideo.addEventListener('error', () => { if (!mainRevealed) setTimeout(revealMain, 500); });
 }
 
 document.body.style.overflow = 'hidden';
